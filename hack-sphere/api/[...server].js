@@ -24,6 +24,16 @@ async function supabaseRequest(path, options = {}) {
 }
 
 module.exports = async (req, res) => {
+  // Add CORS headers to allow frontend fetch requests
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+
+  // Handle preflight OPTIONS requests
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
+  }
+
   // Build absolute URL to parse pathname and query safely
   const host = req.headers.host || 'localhost';
   const fullUrl = new URL(req.url, `http://${host}`);
